@@ -73,8 +73,8 @@ export default function StudentPortal() {
               <BookOpen className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-gray-900">Portal Tugas Sekolah</h1>
-              <p className="text-xs text-gray-500">Info Tugas & PR Resmi untuk Siswa</p>
+              <h1 className="text-lg font-bold text-gray-900">Portal Tugas X-E2</h1>
+              <p className="text-xs text-gray-500">Info Tugas & PR </p>
             </div>
           </div>
           <Link
@@ -89,7 +89,7 @@ export default function StudentPortal() {
       <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
         {/* Banner Welcome */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 sm:p-8 text-white shadow-lg shadow-blue-500/10">
-          <h2 className="text-2xl font-bold mb-2">Selamat Datang, Siswa! 👋</h2>
+          <h2 className="text-2xl font-bold mb-2">Selamat Datang Di Web Tugas X-E2</h2>
           <p className="text-blue-100 text-sm max-w-xl">
             Cek seluruh daftar tugas dan PR sekolah di sini. Gunakan pencarian atau filter mata pelajaran untuk menemukan tugasmu dengan mudah.
           </p>
