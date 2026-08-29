@@ -57,6 +57,7 @@ export default function TambahTugas() {
           title: formData.title, 
           deadline: formData.deadline,
           subject_id: formData.subject_id,
+          teacher_name: '-', // Mengisi otomatis agar tidak bentrok dengan not-null constraint database
           assigned_at: new Date().toISOString()
         }
       ])
