@@ -237,10 +237,6 @@ export default function StudentHomePage() {
                 {/* Detail Tugas */}
                 <div className="mt-5 pt-4 border-t border-slate-100 space-y-2 text-xs text-slate-600">
                   <div className="flex items-center space-x-2">
-                    <GraduationCap className="h-4 w-4 text-slate-400" />
-                    <span>Kelas: <strong className="text-slate-800">{task.classes?.name || '-'}</strong></span>
-                  </div>
-                  <div className="flex items-center space-x-2">
                     <User className="h-4 w-4 text-slate-400 text-xs" />
                     <span>Guru: <strong className="text-slate-800">{task.teacher_name}</strong></span>
                   </div>
