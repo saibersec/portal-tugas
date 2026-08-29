@@ -183,20 +183,6 @@ export default function StudentHomePage() {
             />
           </div>
 
-          {/* Filter Pilih Kelas */}
-          <div className="flex items-center space-x-2">
-            <Filter className="h-4 w-4 text-slate-400 hidden sm:block" />
-            <select
-              value={selectedClass}
-              onChange={(e) => setSelectedClass(e.target.value)}
-              className="w-full sm:w-auto border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            >
-              <option value="">Semua Kelas</option>
-              {classes.map((cls) => (
-                <option key={cls.id} value={cls.name}>{cls.name}</option>
-              ))}
-            </select>
-          </div>
 
           {/* Filter Pilih Mata Pelajaran */}
           <div>
