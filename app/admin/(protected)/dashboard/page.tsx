@@ -2,47 +2,38 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { BookOpen, CheckCircle, Clock, AlertCircle, Plus } from 'lucide-react'
 
-// Memastikan data selalu di-fetch paling baru (tanpa cache)
+// Memaksa Vercel selalu mengambil data terbaru dari database (tanpa cache)
+export const dynamic = 'force-dynamic'
 export const revalidate = 0 
-
-interface TaskItem {
-  id: string
-  title: string
-  deadline: string
-  assigned_at: string
-  subjects?: { name: string } | null
-}
 
 export default async function DashboardPage() {
   const supabase = await createClient()
 
-  // Ambil data tugas beserta mata pelajaran saja (tanpa kelas)
-  const { data: tasks } = await supabase
+  // 1. Ambil seluruh data tugas
+  const { data: tasksData } = await supabase
     .from('tasks')
-    .select(`
-      id,
-      title,
-      deadline,
-      assigned_at,
-      subjects ( name )
-    `)
+    .select('*')
     .order('assigned_at', { ascending: false })
 
-  const taskList: TaskItem[] = tasks || []
+  // 2. Ambil data mata pelajaran
+  const { data: subjectsData } = await supabase
+    .from('subjects')
+    .select('id, name')
+
+  // Petakan ID mata pelajaran ke Namanya
+  const subjectMap = new Map(subjectsData?.map((s) => [s.id, s.name]) || [])
+
+  const taskList = tasksData || []
   const totalTasks = taskList.length
 
   const now = new Date()
 
-  // Hitung Tugas Aktif dan Terlambat
-  const activeTasks = taskList.filter(t => new Date(t.deadline) > now).length
-  const overdueTasks = taskList.filter(t => new Date(t.deadline) <= now).length
+  // Hitung statistik
+  const activeTasks = taskList.filter((t) => !t.deadline || new Date(t.deadline) > now).length
+  const overdueTasks = taskList.filter((t) => t.deadline && new Date(t.deadline) <= now).length
 
-  // Hitung Deadline Hari Ini
   const todayStr = now.toISOString().split('T')[0]
-  const deadlineToday = taskList.filter(t => {
-    if (!t.deadline) return false
-    return t.deadline.startsWith(todayStr)
-  }).length
+  const deadlineToday = taskList.filter((t) => t.deadline && t.deadline.startsWith(todayStr)).length
 
   const recentTasks = taskList.slice(0, 5)
 
@@ -135,7 +126,7 @@ export default async function DashboardPage() {
                 {recentTasks.map((task) => (
                   <tr key={task.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 font-medium text-gray-900">
-                      {task.subjects?.name || '-'}
+                      {subjectMap.get(task.subject_id) || '-'}
                     </td>
                     <td className="px-6 py-4">{task.title}</td>
                     <td className="px-6 py-4">{formatDate(task.deadline)}</td>
