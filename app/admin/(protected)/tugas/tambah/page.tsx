@@ -11,11 +11,6 @@ interface Subject {
   name: string
 }
 
-interface ClassItem {
-  id: string
-  name: string
-}
-
 export default function TambahTugas() {
   const router = useRouter()
   const supabase = createClient()
@@ -23,30 +18,21 @@ export default function TambahTugas() {
   const [isFetching, setIsFetching] = useState(true)
 
   const [subjects, setSubjects] = useState<Subject[]>([])
-  const [classes, setClasses] = useState<ClassItem[]>([])
 
   const [formData, setFormData] = useState({
     title: '',
-    teacher_name: '',
     deadline: '',
-    subject_id: '',
-    class_id: ''
+    subject_id: ''
   })
 
-  // Mengambil daftar Mata Pelajaran & Kelas dari Supabase
   useEffect(() => {
     async function fetchData() {
       setIsFetching(true)
       const { data: subjectData } = await supabase.from('subjects').select('id, name')
-      const { data: classData } = await supabase.from('classes').select('id, name')
 
       if (subjectData && subjectData.length > 0) {
         setSubjects(subjectData)
         setFormData((prev) => ({ ...prev, subject_id: subjectData[0].id }))
-      }
-      if (classData && classData.length > 0) {
-        setClasses(classData)
-        setFormData((prev) => ({ ...prev, class_id: classData[0].id }))
       }
       setIsFetching(false)
     }
@@ -57,8 +43,8 @@ export default function TambahTugas() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.subject_id || !formData.class_id) {
-      alert('Mata pelajaran atau kelas belum tersedia/dipilih.')
+    if (!formData.subject_id) {
+      alert('Mata pelajaran belum tersedia/dipilih.')
       return
     }
 
@@ -69,11 +55,9 @@ export default function TambahTugas() {
       .insert([
         { 
           title: formData.title, 
-          teacher_name: formData.teacher_name, 
           deadline: formData.deadline,
           subject_id: formData.subject_id,
-          class_id: formData.class_id,
-          assigned_at: new Date().toISOString() // <-- Tambahkan baris ini
+          assigned_at: new Date().toISOString()
         }
       ])
 
@@ -136,32 +120,6 @@ export default function TambahTugas() {
                 <option key={sub.id} value={sub.id}>{sub.name}</option>
               ))}
             </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
-            <select
-              required
-              value={formData.class_id}
-              onChange={(e) => setFormData({...formData, class_id: e.target.value})}
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              {classes.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nama Guru</label>
-            <input 
-              type="text" 
-              required
-              value={formData.teacher_name}
-              onChange={(e) => setFormData({...formData, teacher_name: e.target.value})}
-              className="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Contoh: Pak Budi"
-            />
           </div>
 
           <div>
